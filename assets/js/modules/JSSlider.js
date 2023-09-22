@@ -89,8 +89,13 @@ export default class JSSlider {
   }
   onImageClick(e) {
     this.sliderRootElement.classList.add("js-slider--active");
+    this.createThumb(e)
+    this.sliderStart();
+  }
+  
+  createThumb (e) {
     const thumbImages = this.getCurrentImages(e);
-    thumbImages.forEach((el) => {
+     thumbImages.forEach((el) => {
       const images = el.querySelector("img");
       const newSliderThumbsProto = this.sliderProto.cloneNode(true);
       const atr = images.getAttribute("src");
@@ -105,13 +110,13 @@ export default class JSSlider {
         newImages.classList.add("js-slider__thumbs-image--current");
       }
     });
-    this.sliderStart();
   }
+
   getCurrentImageAtr(e) {
     const currentImage = e.target.querySelector("img");
     const currentImageSrc = currentImage.getAttribute("src");
     const currentSliderImage =
-      this.sliderRootElement.querySelector(".js-slider__image");
+    this.sliderRootElement.querySelector(".js-slider__image");
     currentSliderImage.setAttribute("src", currentImageSrc);
     return currentImageSrc;
   }
@@ -125,26 +130,31 @@ export default class JSSlider {
     return selectedGroupOfImages;
   }
 
-  changeSlide(currentImage, figure, siblingEl) {
+   changeSlide(currentImage, figure, siblingEl) {
     currentImage.classList.remove("js-slider__thumbs-image--current");
-    if (
-      figure &&
-      !figure.classList.contains("js-slider__thumbs-item--prototype")
-    ) {
-      const image = figure.querySelector("img");
-      currentImage.classList.remove("js-slider__thumbs-image--current");
-      image.classList.add("js-slider__thumbs-image--current");
-      const getAtr = image.getAttribute("src");
-      const sliderImage = document.querySelector(".js-slider__image");
-      sliderImage.setAttribute("src", getAtr);
-    } else {
+    if (figure && !figure.classList.contains("js-slider__thumbs-item--prototype")) {
+     this.changeCurrentSlide(currentImage, figure)
+    } 
+    else {
+      this.setCarouselSlide(currentImage, siblingEl)
+    }
+  }
+
+  changeCurrentSlide(currentImage, figure) {
+    const image = figure.querySelector("img");
+    currentImage.classList.remove("js-slider__thumbs-image--current");
+    image.classList.add("js-slider__thumbs-image--current");
+    const getAtr = image.getAttribute("src");
+    const sliderImage = document.querySelector(".js-slider__image");
+    sliderImage.setAttribute("src", getAtr);
+  }
+  setCarouselSlide(currentImage, siblingEl) {
       currentImage.classList.remove("js-slider__thumbs-image--current");
       const carouselImage = siblingEl.querySelector("img");
       carouselImage.classList.add("js-slider__thumbs-image--current");
       const getAtr = carouselImage.getAttribute("src");
       const sliderImage = document.querySelector(".js-slider__image");
       sliderImage.setAttribute("src", getAtr);
-    }
   }
 
   onImageNext() {
